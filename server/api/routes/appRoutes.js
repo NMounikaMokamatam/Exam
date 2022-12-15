@@ -30,8 +30,8 @@ module.exports = function (app) {
     app.route('/api/excercises/:userId')
         .get(excercisesList.getExcerciseByUserId)
 
-    app.route('/api/matchingexercises')
-        .get(excercisesTitle.getMatchingExerciseTitle)
+    app.route('/api/getmatchingexercises')
+        .post(excercisesTitle.getMatchingExerciseTitle)
 
     app.route('/api/matchingexercises')
         .post(excercisesTitle.createExcerciseTitle)

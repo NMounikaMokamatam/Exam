@@ -18,8 +18,6 @@ exports.getMatchingExerciseTitle = function (req, res) {
     ExcerciseTitle.find({ title: { $regex: req.body.value } }, function (err, Excercise) {
         if (!err) {
             res.json(Excercise);
-        } else {
-            res.json([]);
         }
     });
 };

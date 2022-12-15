@@ -1,21 +1,48 @@
 <script>
 import session from "../stores/session";
+import { defineComponent } from "vue";
+import { useExcercisesStore } from "../stores/excerciseStore";
 
 const API_URL = "http://localhost:3000/api/";
+const data = [
+  "Angular",
+  "Angular 2",
+  "Aurelia",
+  "Backbone",
+  "Ember",
+  "jQuery",
+  "Meteor",
+  "Node.js",
+  "Polymer",
+  "React",
+  "RxJS",
+  "Vue.js",
+];
 
-export default {
+export default defineComponent({
   name: "HomeVue",
   data: () => ({
-    myExcercises:[],
+    myExcercises: [],
     excerciseName: "",
     description: "",
+    selected: ""
   }),
   mounted() {
-    fetch(API_URL+"excercises/"+session.user._id)
+    fetch(API_URL + "excercises/" + session.user._id)
       .then(response => response.json())
       .then(result => {
         this.myExcercises = result;
       });
+  },
+  computed: {
+    filteredDataArray() {
+      const body = JSON.stringify({
+        value: this.excerciseName
+      })
+      const excerciseStore = useExcercisesStore();
+      excerciseStore.getMatchingExcerciseTitle(body)
+      return excerciseStore.exerciseTitleList;
+    }
   },
   methods: {
     addExcersise() {
@@ -26,7 +53,7 @@ export default {
           description: this.description,
         }
       );
-      fetch(API_URL +"excercises", {
+      fetch(API_URL + "excercises", {
         method: "POST",
         body: body,
         headers: {
@@ -39,7 +66,7 @@ export default {
         });
     }
   }
-};
+});
 </script>
 <template>
   <main class="columns is-centered is-vcentered is-mobile">
@@ -50,7 +77,11 @@ export default {
           <div class="field">
             <label class="label">Name</label>
             <div class="control">
-              <input class="input" placeholder="Enter exercise name" v-model="excerciseName" />
+              <!-- <input class="input" placeholder="Enter exercise name" v-model="excerciseName" /> -->
+              <o-autocomplete v-model="excerciseName" rounded expanded placeholder="e.g. Jogging" icon="search"
+                clearable :data="filteredDataArray" @select="(option) => (selected = option)">
+                <template #empty>No results found</template>
+              </o-autocomplete>
             </div>
           </div>
           <div class="field">

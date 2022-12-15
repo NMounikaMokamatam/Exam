@@ -9,7 +9,8 @@ import 'bulma/css/bulma.css'
 
 const app = createApp(App);
 
-app.use(createPinia());
+
 app.use(Oruga);
 app.use(router);
+app.use(createPinia());
 app.mount("#app");
